@@ -1,0 +1,48 @@
+{
+  "hook": {
+    "enabled": true,
+    "limits": {
+      "maxFindings": 5,
+      "maxChars": 8000
+    }
+  },
+  "detector": {
+    "ignoreRules": [],
+    "ignoreFiles": [],
+    "ignoreValues": [
+      {
+        "rule": "design-system-font",
+        "value": "dela gothic one",
+        "createdAt": "2026-11-15T05:17:38.706Z",
+        "reason": "user confirmed Direction B (manga panels) on 2026-11-15, which uses these fonts; DESIGN.md not yet rewritten for B"
+      },
+      {
+        "rule": "design-system-font",
+        "value": "zen kaku gothic new",
+        "createdAt": "2026-11-15T05:17:38.922Z",
+        "reason": "user confirmed Direction B (manga panels) on 2026-11-15, which uses these fonts; DESIGN.md not yet rewritten for B"
+      },
+      {
+        "rule": "bounce-easing",
+        "value": "cubic-bezier(.2, 1.6, .4, 1)",
+        "createdAt": "2026-11-15T08:17:07.272Z",
+        "reason": "Claude's call during the app critique fixes: overshoot is the literal stamp slam of the CLEAR moment (one-shot, state-triggered, fades under reduced motion)"
+      },
+      {
+        "rule": "bounce-easing",
+        "value": "cubic-bezier(.2, 1.5, .4, 1)",
+        "createdAt": "2026-11-15T08:17:07.382Z",
+        "reason": "Claude's call during the app critique fixes: overshoot is the literal stamp slam of the CLEAR moment (one-shot, state-triggered, fades under reduced motion)"
+      },
+      {
+        "rule": "design-system-font",
+        "value": "chakra petch",
+        "files": [
+          "mockups/game-menu.html"
+        ],
+        "createdAt": "2026-11-15T08:28:58.959Z",
+        "reason": "Claude's call: mockups/game-menu.html is the gitignored behaviour-reference mockup of the superseded navy/cyan direction; it keeps its original font on purpose"
+      }
+    ]
+  }
+}

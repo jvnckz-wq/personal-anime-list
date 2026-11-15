@@ -40,4 +40,15 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-/design-reference
+#samples
+/mockups/
+
+# agent skills
+/.agents/
+/.claude/
+/.impeccable/*
+!/.impeccable/config.json
+
+# obsidian vault settings
+.obsidian/
+/personal-anilist/
