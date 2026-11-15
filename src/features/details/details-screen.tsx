@@ -193,11 +193,11 @@ function SavePanel({ entry, summary, onNew, onDelete }: { entry: ListEntry | und
             Save data
           </h2>
         </div>
-        <p>Not a file yet. Start it now and it goes straight to Continue, or keep it for later.</p>
+        <p>Not saved yet. Save game starts it and puts it on Continue, or keep it for later with Plan to watch.</p>
         <div className="actions">
           <SkewButton onClick={() => onNew("watching")}>
             <Icon name="plus" />
-            New file
+            Save game
           </SkewButton>
           <SkewButton variant="outline" onClick={() => onNew("plan_to_watch")}>
             Plan to watch

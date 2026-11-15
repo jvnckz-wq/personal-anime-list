@@ -5,7 +5,7 @@ import { type ReactNode, type RefObject, useEffect, useRef } from "react";
 import { ago, episodeText, pad, percent, playTime, slotLabel } from "@/lib/format";
 import { useList } from "@/lib/store/list-context";
 import type { ListEntry } from "@/lib/types";
-import { Icon, MemoryBlocks, Poster, SkewButton, Stamp, retrigger } from "./primitives";
+import { MemoryBlocks, Poster, SkewButton, Stamp, retrigger } from "./primitives";
 
 /** Answers the last change to this file: a hit for +1, the flood and stamp for CLEAR. */
 export function useSlotFlash(ref: RefObject<HTMLElement | null>, malId: number) {
@@ -35,19 +35,13 @@ function LogButton({ entry, large }: { entry: ListEntry; large?: boolean }) {
     <SkewButton
       small={!large}
       data-log=""
-      aria-label={`Log episode ${next} of ${entry.title}`}
+      aria-label={large ? `Watched EP ${next}, ${entry.title}` : `+1 EP, ${entry.title}`}
       onClick={(e) => {
         stop(e);
         logEpisode(entry.malId);
       }}
     >
-      {large ? (
-        `Watched EP ${next}`
-      ) : (
-        <>
-          <Icon name="plus" />1 EP
-        </>
-      )}
+      {large ? `Watched EP ${next}` : "+1 EP"}
     </SkewButton>
   );
 }

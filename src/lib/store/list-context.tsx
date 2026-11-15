@@ -198,7 +198,7 @@ export function ListProvider({ children }: { children: React.ReactNode }) {
         updatedAt: stamp,
       };
       const name = shortTitle(a.title);
-      commit(status === "watching" ? `New file ${pad(fileNo)}: ${name}, ready on Continue` : `${name} saved to Plan to watch`, (list) => [...list, entry]);
+      commit(status === "watching" ? `Game saved to File ${pad(fileNo)}: ${name}, ready on Continue` : `${name} saved to Plan to watch`, (list) => [...list, entry]);
     },
     [commit],
   );

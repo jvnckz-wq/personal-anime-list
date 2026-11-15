@@ -10,8 +10,8 @@ import { ToastProvider } from "./toast";
 const MENU = [
   { href: "/", screen: "continue", n: "01", label: "CONTINUE" },
   { href: "/discover", screen: "new", n: "02", label: "NEW GAME" },
-  { href: "/list", screen: "files", n: "03", label: "FILES" },
-  { href: "/stats", screen: "records", n: "04", label: "RECORDS" },
+  { href: "/list", screen: "files", n: "03", label: "LOAD GAME" },
+  { href: "/stats", screen: "records", n: "04", label: "PLAYER DATA" },
 ] as const;
 
 type Screen = "continue" | "new" | "files" | "detail" | "records";
@@ -89,7 +89,13 @@ function Shell({ children }: { children: React.ReactNode }) {
       requestAnimationFrame(() => {
         if (pendingSearch.current && pathname === "/discover") {
           pendingSearch.current = false;
-          visible("#q")?.focus();
+          let tries = 0;
+          const focusSearch = () => {
+            const q = visible("#q");
+            if (q) q.focus();
+            else if (tries++ < 20) setTimeout(focusSearch, 50);
+          };
+          focusSearch();
           return;
         }
         const active = document.activeElement as HTMLElement | null;
@@ -270,12 +276,31 @@ function SlotCursor({ mainRef }: { mainRef: RefObject<HTMLElement | null> }) {
         return;
       }
       slot.classList.add("is-cursor");
-      const a = slot.getBoundingClientRect();
+      // Brackets sit on the shape you see: a card frames its poster, and every bracket
+      // follows the real (slanted) corner of the clip-path rather than the bounding box.
+      const target = (slot.querySelector(".card-poster") as HTMLElement | null) ?? slot;
+      const a = target.getBoundingClientRect();
       const b = main.getBoundingClientRect();
-      const gap = 10;
-      cur.style.width = `${a.width + gap * 2}px`;
+      const pts = shapeCorners(target, a.width, a.height);
+      const gap = 8;
+      const size = 26;
+      const xs = [pts.tl[0] - gap, pts.bl[0] - gap, pts.tr[0] + gap, pts.br[0] + gap];
+      const minX = Math.min(...xs);
+      const maxX = Math.max(...xs);
+      cur.style.width = `${maxX - minX}px`;
       cur.style.height = `${a.height + gap * 2}px`;
-      cur.style.transform = `translate(${a.left - b.left - gap}px, ${a.top - b.top - gap}px)`;
+      cur.style.transform = `translate(${a.left - b.left + minX}px, ${a.top - b.top - gap}px)`;
+      const [tl, tr, bl, br] = Array.from(cur.children) as HTMLElement[];
+      const put = (el: HTMLElement, x: number, y: number) => {
+        el.style.left = `${x - minX}px`;
+        el.style.top = `${y + gap}px`;
+        el.style.right = "auto";
+        el.style.bottom = "auto";
+      };
+      put(tl, pts.tl[0] - gap, pts.tl[1] - gap);
+      put(tr, pts.tr[0] + gap - size, pts.tr[1] - gap);
+      put(bl, pts.bl[0] - gap, pts.bl[1] + gap - size);
+      put(br, pts.br[0] + gap - size, pts.br[1] + gap - size);
       cur.style.opacity = "1";
       if (slot !== last) {
         retrigger(cur, "snap");
@@ -284,14 +309,20 @@ function SlotCursor({ mainRef }: { mainRef: RefObject<HTMLElement | null> }) {
       last = slot;
     };
     const later = () => setTimeout(place);
+    // Panels are dealt in with a short slide; re-measure once they land so brackets sit on the final spot.
+    const settle = (e: AnimationEvent) => {
+      if (e.animationName === "deal" || e.animationName === "cutIn") place();
+    };
     document.addEventListener("focusin", place);
     document.addEventListener("focusout", later);
+    document.addEventListener("animationend", settle);
     window.addEventListener("resize", place);
     const ro = new ResizeObserver(place);
     if (mainRef.current) ro.observe(mainRef.current);
     return () => {
       document.removeEventListener("focusin", place);
       document.removeEventListener("focusout", later);
+      document.removeEventListener("animationend", settle);
       window.removeEventListener("resize", place);
       ro.disconnect();
     };
@@ -304,6 +335,30 @@ function SlotCursor({ mainRef }: { mainRef: RefObject<HTMLElement | null> }) {
       <i />
     </div>
   );
+}
+
+type Pt = [number, number];
+
+/** One clip-path length ("12%", "26px", "calc(100% - 26px)") in px along an axis of `size`. */
+function length(token: string, size: number) {
+  const calc = /calc\(\s*100%\s*-\s*([\d.]+)px\s*\)/.exec(token);
+  if (calc) return size - Number(calc[1]);
+  if (token.endsWith("%")) return (Number.parseFloat(token) / 100) * size;
+  return Number.parseFloat(token) || 0;
+}
+
+/** The four visible corners of an element's polygon clip-path (its box corners when it has none). */
+function shapeCorners(el: HTMLElement, w: number, h: number): { tl: Pt; tr: Pt; bl: Pt; br: Pt } {
+  const box = { tl: [0, 0] as Pt, tr: [w, 0] as Pt, bl: [0, h] as Pt, br: [w, h] as Pt };
+  const clip = getComputedStyle(el).clipPath;
+  const inner = /^polygon\((.*)\)$/.exec(clip ?? "")?.[1];
+  if (!inner) return box;
+  const points: Pt[] = inner.split(/,(?![^(]*\))/).map((pair) => {
+    const parts = pair.trim().match(/calc\([^)]*\)|[^\s]+/g) ?? ["0", "0"];
+    return [length(parts[0], w), length(parts[1] ?? "0", h)];
+  });
+  const nearest = (c: Pt) => points.reduce((best, p) => (Math.hypot(p[0] - c[0], p[1] - c[1]) < Math.hypot(best[0] - c[0], best[1] - c[1]) ? p : best), points[0]);
+  return { tl: nearest(box.tl), tr: nearest(box.tr), bl: nearest(box.bl), br: nearest(box.br) };
 }
 
 /** Spatial move to the nearest visible slot in a direction. */

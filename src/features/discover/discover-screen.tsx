@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { SearchField } from "@/components/ui/search-field";
 import { EmptyState, Icon, SkewButton, Tabs } from "@/components/ui/primitives";
 import { CardSkeletons, MetaList, PosterCard } from "@/components/ui/slots";
@@ -34,9 +34,31 @@ export function DiscoverScreen() {
     if (typeof document === "undefined" || document.activeElement?.id !== "q") setText(q);
   }
   const typeTimer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
+  // Leaving New game cancels a pending search update: at the moment the owner opens a file or a menu
+  // entry (before the URL changes), and again when the page is hidden.
+  useLayoutEffect(() => () => clearTimeout(typeTimer.current), []);
+  useEffect(() => {
+    const cancel = () => clearTimeout(typeTimer.current);
+    const onClick = (e: MouseEvent) => {
+      if ((e.target as HTMLElement).closest?.("a[href], .slot")) cancel();
+    };
+    const onKey = (e: KeyboardEvent) => {
+      const t = e.target as HTMLElement;
+      if (((e.key === "Enter" || e.key === " ") && t.closest?.(".slot")) || (/^[1-4]$/.test(e.key) && t.id !== "q")) cancel();
+    };
+    document.addEventListener("click", onClick, true);
+    document.addEventListener("keydown", onKey, true);
+    return () => {
+      document.removeEventListener("click", onClick, true);
+      document.removeEventListener("keydown", onKey, true);
+    };
+  }, []);
   const search = (v: string, now: boolean) => {
     clearTimeout(typeTimer.current);
-    const run = () => set({ q: v.trim() });
+    // A delayed update must never pull the owner back after they opened a file.
+    const run = () => {
+      if (window.location.pathname === "/discover") set({ q: v.trim() });
+    };
     if (now) run();
     else typeTimer.current = setTimeout(run, 400);
   };
@@ -143,9 +165,9 @@ export function DiscoverScreen() {
                       <span>{STATUS_LABEL[file.status]}</span>
                     </span>
                   ) : (
-                    <SkewButton small aria-label={`New file: start watching ${a.title}`} onClick={() => addFile(a, "watching")}>
+                    <SkewButton small aria-label={`Save game: start watching ${a.title}`} onClick={() => addFile(a, "watching")}>
                       <Icon name="plus" />
-                      New file
+                      Save game
                     </SkewButton>
                   )
                 }

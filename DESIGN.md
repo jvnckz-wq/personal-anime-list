@@ -174,13 +174,13 @@ components:
 
 **Creative North Star: "The Save Select Screen"**
 
-PAL is a game's save-select screen drawn as a manga page. Every anime on the list is a save file. Each file has a permanent number, a play time, a last-saved time, and progress drawn as memory blocks. A finished file gets a CLEAR! stamp that slams on like a sound effect. The four sections are menu entries, not database pages: `01 CONTINUE`, `02 NEW GAME`, `03 FILES`, `04 RECORDS`. The menu shapes how the app behaves:
+PAL is a game's save-select screen drawn as a manga page. Every anime on the list is a save file. Each file has a permanent number, a play time, a last-saved time, and progress drawn as memory blocks. A finished file gets a CLEAR! stamp that slams on like a sound effect. The four sections are menu entries, not database pages: `01 CONTINUE`, `02 NEW GAME`, `03 LOAD GAME`, `04 PLAYER DATA`. The menu shapes how the app behaves:
 - A bracket cursor marks the selected slot.
 - Arrows move, Enter opens, Esc backs out.
 - 1–4 jump between sections, / searches, + logs an episode and U undoes.
 
 The world is a manga page with the lights off. The page is ink and the panels are paper. Panels are cut as trapezoids, with alternating slants down a list. Screentone dots fade into the far corner of each panel. Signal yellow is the only accent: it means selected, confirmed or cleared. The energy borrows from Persona 5's menus but not their look. There is no red, no ransom-note lettering and no calling cards. The energy lives in motion that answers the owner:
-- speed lines streak across on every screen change
+- on every screen change a yellow slash with speed lines crosses the page, the new screen is cut in behind it, the title strikes in and panels are dealt in a few at a time
 - the chosen menu entry strikes in trailing speed lines
 - +1 punches radial speed lines out of the panel
 - CLEAR floods the panel in a yellow burst before the stamp slams on
@@ -191,7 +191,7 @@ Density is moderate and the daily loop is one action. Continue puts the cursor o
 - Ink page, paper panels, one signal-yellow accent; poster art supplies every other colour
 - Trapezoid panel cuts, screentone, speed lines: a manga page, not a SaaS card kit
 - Dela Gothic One for names, titles and identifying numbers; Zen Kaku Gothic New for everything you read or operate
-- Save-file vocabulary throughout: file, Continue, New game, Cleared, Delete file, Back up / Restore
+- Save-file vocabulary throughout: file, Continue, New game, Load game, Player data, Save game, Cleared, Delete file, Back up / Restore
 - A bracket cursor that follows focus, never hover, and a button guide like a game's control hints
 - Flat: no shadows, gradients or blur; depth comes from ink against paper
 
@@ -242,7 +242,7 @@ Ink and paper with a single signal yellow. Tokens flip with context: every panel
 - **Button** (700, 20px, 2px tracking, uppercase; 16px small): button labels.
 - **Label** (700, 15px, 2px tracking, uppercase): field labels such as Genre, Type, Status, Episodes and My score, and save stats (File, Play time, Last saved).
 - **Meta** (500, 15px, tabular figures): readouts such as "Episode 12 of 28", meta lists, legends and toasts.
-- **Numerals** (display face, 34px): file numbers. **Clock** (64px; 44px on phone): the Records play time. **Heading small** (28px): empty-state and dialog titles, phone titles. **Body large** (18px): synopses, tabs, selects. **Key** (14px): kbd keys. **Caption** (12px): phone menu labels. **Stamp large** (44px): CLEAR! on a clearing hero.
+- **Numerals** (display face, 34px): file numbers. **Clock** (64px; 44px on phone): the Player data play time. **Heading small** (28px): empty-state and dialog titles, phone titles. **Body large** (18px): synopses, tabs, selects. **Key** (14px): kbd keys. **Caption** (12px): phone menu labels. **Stamp large** (44px): CLEAR! on a clearing hero.
 
 ### Named Rules
 **The Display Means Identity Rule.** The display face carries names, titles and numbers that identify a file. Data you read or edit uses the body face: last saved, scores in rows, readouts.
@@ -253,12 +253,12 @@ Ink and paper with a single signal yellow. Tokens flip with context: every panel
 
 On desktop (1024px and up), a centred 1280px shell holds a sticky 260px sidebar and the main column, with 48px padding and a 48px gap. The sidebar holds:
 - the logo
-- the menu, stepping in by 18px per item
+- the menu: four equal-width entries on one edge
 - the button guide
 
-The main column opens with the screen title. Screens stack sections 36px apart. Rows sit 14px apart. Poster grids auto-fill 170px columns. Skewed controls keep about 6px of slack so a lean never clips its own corner, and scroll strips pad 8px so focus rings are never cut.
+The main column opens with the screen title. Screens stack sections 36px apart. Rows sit 14px apart. Poster grids auto-fill 170px columns. The page reserves the scrollbar gutter, so the centred layout never shifts between screens. Skewed controls keep about 6px of slack so a lean never clips its own corner, and scroll strips pad 8px so focus rings are never cut.
 
-Search lives only inside New game, as one query bar: search, then browse tabs, then a row of genre and type. Elsewhere, / opens it. Files has its own "Find a file" for the owner's list.
+Search lives only inside New game, as one query bar: search, then browse tabs, then a row of genre and type. Elsewhere, / opens it. Load game has its own "Find a file" for the owner's list.
 
 Below 1024px, the layout becomes one column with 16px gutters:
 - The menu becomes a fixed bottom bar of four equal 52px items with 12px labels. The trail is removed there.
@@ -287,13 +287,13 @@ Sharp, slanted and cut. Every radius is 0px.
 Components are snappy and physical. Hover changes tone, press sinks 2px, and nothing moves on hover.
 
 ### Buttons
-- **Primary:** signal yellow with ink text and a 2px ink edge. It carries the one main action: "Watched EP 13", "+1 EP", "New file", "No".
+- **Primary:** signal yellow with ink text and a 2px ink edge. It carries the one main action: "Watched EP 13", "+1 EP", "Save game", "No".
 - **Outline:** transparent with a 2px current-text border. Used for secondary actions such as "Open file", "Plan to watch", "Back" and "Yes, delete".
 - **Muted:** track fill, for tertiary actions such as "Start" and "Delete file".
 - **Small:** 44px tall, the minimum target.
 
 ### Navigation
-- **Menu:** paper parallelograms with ink display-face labels, stepped in by 18px. The active entry is yellow with speed lines trailing behind it.
+- **Menu:** four equal paper parallelograms on one edge, with ink display-face labels. The active entry is yellow with speed lines trailing behind it.
 - **Button guide:** kbd keys with their actions. It adapts to the screen and hides on phone.
 
 ### Tabs and chips
@@ -311,7 +311,7 @@ Components are snappy and physical. Hover changes tone, press sinks 2px, and not
   - A paper trapezoid with the poster, file number and save stats (play time, last saved).
   - The title, the episode readout with percent, and memory blocks.
   - "Watched EP n" and "Open file" buttons.
-- **Row (Continue and Files):**
+- **Row (Continue and Load game):**
   - The file number, poster, title, readout and blocks.
   - A +1 EP button while watching, or Start for plan-to-watch.
 - **Poster card (New game, recommendations, cleared wall):** a parallelogram poster, title and meta, plus one action or a status tag.

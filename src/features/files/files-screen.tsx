@@ -20,13 +20,13 @@ const SORTS: Record<Sort, (a: ListEntry, b: ListEntry) => number> = {
 };
 
 const EMPTY: Record<Status, { title: string; text: string; action?: { href: string; label: string } }> = {
-  watching: { title: "Nothing in progress", text: "Start a file from New game, or pick one from Plan to watch.", action: { href: "/discover", label: "New game" } },
+  watching: { title: "Nothing in progress", text: "Save a game from New game, or start one from Plan to watch.", action: { href: "/discover", label: "New game" } },
   completed: { title: "No cleared files yet", text: "Log a show's last episode and its file gets stamped CLEAR here.", action: { href: "/", label: "Continue" } },
   plan_to_watch: { title: "Nothing saved for later", text: "Open any anime in New game and choose Plan to watch.", action: { href: "/discover", label: "New game" } },
   dropped: { title: "No dropped files", text: "Files you stop watching land here. Change a file's status on its details page." },
 };
 
-/** Files: the whole archive, by status. Editing happens on each file's details page. */
+/** Load game: every saved game, by status. Editing happens on each file's details page. */
 export function FilesScreen() {
   const { ready, entries, clearingId } = useList();
   const [tab, setTab] = useState<Status>("watching");
@@ -41,7 +41,7 @@ export function FilesScreen() {
   return (
     <section className="screen" aria-labelledby="t-files">
       <h1 className="page-title" id="t-files" tabIndex={-1}>
-        Files
+        Load game
       </h1>
       <div className="controls">
         <Tabs

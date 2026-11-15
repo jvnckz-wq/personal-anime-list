@@ -15,7 +15,7 @@ const SEGMENT: Record<Status, [string, string]> = {
   dropped: ["var(--track)", "var(--paper)"],
 };
 
-/** Records: the play record, computed from the list alone. */
+/** Player data: the play record, computed from the list alone. */
 export function RecordsScreen() {
   const { ready, entries, backup, restore } = useList();
   const fileInput = useRef<HTMLInputElement>(null);
@@ -59,7 +59,7 @@ export function RecordsScreen() {
   else if (!entries.length)
     body = (
       <div className="records">
-        <EmptyState title="No records yet" text="Records fill in as you start and clear files." actions={<SkewLink href="/discover">New game</SkewLink>} />
+        <EmptyState title="No player data yet" text="Player data fills in as you save and clear games." actions={<SkewLink href="/discover">New game</SkewLink>} />
         {dataBox}
       </div>
     );
@@ -178,7 +178,7 @@ export function RecordsScreen() {
   return (
     <section className="screen" aria-labelledby="t-records">
       <h1 className="page-title" id="t-records" tabIndex={-1}>
-        Records
+        Player data
       </h1>
       {body}
       <ConfirmDialog

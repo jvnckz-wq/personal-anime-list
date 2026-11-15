@@ -53,7 +53,7 @@ export function ContinueScreen() {
         ) : (
           <EmptyState
             title="Nothing in progress"
-            text="Find a show in New game and start a file. Every show you start becomes a save file with its own number, and it waits here, ready to continue."
+            text="Find a show in New game and choose Save game. Every game you save gets its own file number, and it waits here, ready to continue."
             actions={<SkewLink href="/discover">New game</SkewLink>}
           />
         )
