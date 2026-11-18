@@ -3,16 +3,17 @@
 import { useCallback, useRef, useState } from "react";
 import { ConfirmDialog } from "@/components/ui/controls";
 import { EmptyState, SkewButton, SkewLink } from "@/components/ui/primitives";
+import { Ransom } from "@/components/ui/ransom";
 import { PosterCard } from "@/components/ui/slots";
 import { useList } from "@/lib/store/list-context";
 import { STATUS_LABEL, STATUS_ORDER, type Status } from "@/lib/types";
 
-/* Status chart segments step in lightness: yellow, paper, slate, track. */
+/* Status chart segments on the ink panel: paper, hot red, grey, dark grey, each with a readable count. */
 const SEGMENT: Record<Status, [string, string]> = {
-  watching: ["var(--accent)", "var(--ink)"],
-  completed: ["var(--paper)", "var(--ink)"],
-  plan_to_watch: ["var(--slate)", "var(--ink)"],
-  dropped: ["var(--track)", "var(--paper)"],
+  watching: ["var(--paper)", "var(--ink)"],
+  completed: ["var(--red-hot)", "var(--ink)"],
+  plan_to_watch: ["var(--ink-muted)", "var(--ink)"],
+  dropped: ["var(--ink-3)", "var(--paper)"],
 };
 
 /** Player data: the play record, computed from the list alone. */
@@ -178,7 +179,7 @@ export function RecordsScreen() {
   return (
     <section className="screen" aria-labelledby="t-records">
       <h1 className="page-title" id="t-records" tabIndex={-1}>
-        Player data
+        <Ransom text="Player data" seed={26} />
       </h1>
       {body}
       <ConfirmDialog

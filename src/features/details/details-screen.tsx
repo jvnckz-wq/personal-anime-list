@@ -5,7 +5,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { useAppNav } from "@/components/shell/app-shell";
 import { ConfirmDialog, EpisodeStepper, ScorePicker, StatusSelect, TrailerDialog } from "@/components/ui/controls";
 import { EmptyState, Icon, Poster, SkewButton, Stamp } from "@/components/ui/primitives";
-import { CardSkeletons, MetaList, PosterCard, useSlotFlash } from "@/components/ui/slots";
+import { MetaList, PosterCard, useSlotFlash } from "@/components/ui/slots";
 import { ago, pad, playTime, shortTitle } from "@/lib/format";
 import { errorMessage, getAnime, getCharacters, getRecommendations } from "@/lib/anime-api";
 import { useList } from "@/lib/store/list-context";
@@ -103,26 +103,24 @@ export function DetailsScreen() {
           ) : null}
         </div>
         <SavePanel entry={entry} summary={summary} onNew={(status) => addFile(summary, status)} onDelete={() => setAskDelete(true)} />
+        {/* About fills the space under the title, between the poster and the save panel. */}
+        {detail?.synopsis || detail?.trailerEmbedUrl ? (
+          <section className="group about" aria-labelledby="t-about">
+            <h2 className="label" id="t-about">
+              About
+            </h2>
+            {detail.synopsis ? <p>{detail.synopsis}</p> : null}
+            {detail.trailerEmbedUrl ? (
+              <SkewButton variant="outline" small onClick={() => setTrailer(true)}>
+                <Icon name="play" />
+                Watch trailer
+              </SkewButton>
+            ) : null}
+          </section>
+        ) : null}
       </div>
 
       {current?.error && !detail ? <p className="notice">{current.error} Your file is still here and editable.</p> : null}
-
-      {detail?.synopsis || detail?.trailerEmbedUrl ? (
-        <section className="group about" aria-labelledby="t-about">
-          <h2 className="label" id="t-about">
-            About
-          </h2>
-          {detail.synopsis ? <p>{detail.synopsis}</p> : null}
-          {detail.trailerEmbedUrl ? (
-            <SkewButton variant="outline" small onClick={() => setTrailer(true)}>
-              <Icon name="play" />
-              Watch trailer
-            </SkewButton>
-          ) : null}
-        </section>
-      ) : loading ? (
-        <CardSkeletons count={0} />
-      ) : null}
 
       {current?.characters.length ? (
         <section className="group" aria-labelledby="t-chars">

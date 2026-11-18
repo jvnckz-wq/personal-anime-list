@@ -37,7 +37,7 @@ Success means the owner can find, add, track to completion, score and remove an 
 - Anime data comes from the AniList GraphQL API (`https://graphql.anilist.co`), with the Jikan API (`https://api.jikan.moe/v4`) as a fallback. Both are free, need no key and are read-only. AniList allows up to 90 requests a minute and Jikan 3 a second and 60 a minute; PAL stays well under both. Every anime keeps its MyAnimeList id, so both sources and saved files agree.
 - The list is stored in the browser (`localStorage`) and can be exported and imported as JSON as a safeguard.
 - All list reads and writes go through one storage interface (`ListStore`) so a database can replace browser storage later without changing screens.
-- Five screens: Continue (home), New game (discover/search), Load game (my list), file details (anime detail), Player data (stats).
+- A title screen (home: the main menu plus the latest save, one press from logging the next episode) and five screens: Continue, New game (discover/search), Load game (my list), file details (anime detail), Player data (stats).
 - Statuses: watching, completed (cleared), plan to watch, dropped. Scores 1 to 10. Episode count stays within the known total; reaching the total completes the show.
 
 **Phase 2 (planned, not built)**

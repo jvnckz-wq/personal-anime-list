@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { EmptyState, SkewButton, SkewLink, Tabs } from "@/components/ui/primitives";
+import { Ransom } from "@/components/ui/ransom";
 import { SearchField } from "@/components/ui/search-field";
 import { SlotRow } from "@/components/ui/slots";
 import { percent } from "@/lib/format";
@@ -21,7 +22,7 @@ const SORTS: Record<Sort, (a: ListEntry, b: ListEntry) => number> = {
 
 const EMPTY: Record<Status, { title: string; text: string; action?: { href: string; label: string } }> = {
   watching: { title: "Nothing in progress", text: "Save a game from New game, or start one from Plan to watch.", action: { href: "/discover", label: "New game" } },
-  completed: { title: "No cleared files yet", text: "Log a show's last episode and its file gets stamped CLEAR here.", action: { href: "/", label: "Continue" } },
+  completed: { title: "No cleared files yet", text: "Log a show's last episode and its file gets stamped CLEAR here.", action: { href: "/continue", label: "Continue" } },
   plan_to_watch: { title: "Nothing saved for later", text: "Open any anime in New game and choose Plan to watch.", action: { href: "/discover", label: "New game" } },
   dropped: { title: "No dropped files", text: "Files you stop watching land here. Change a file's status on its details page." },
 };
@@ -41,7 +42,7 @@ export function FilesScreen() {
   return (
     <section className="screen" aria-labelledby="t-files">
       <h1 className="page-title" id="t-files" tabIndex={-1}>
-        Load game
+        <Ransom text="Load game" seed={21} />
       </h1>
       <div className="controls">
         <Tabs

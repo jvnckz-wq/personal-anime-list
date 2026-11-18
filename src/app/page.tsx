@@ -1,5 +1,5 @@
-import { ContinueScreen } from "@/features/continue/continue-screen";
+import { TitleScreen } from "@/features/title/title-screen";
 
-export default function ContinuePage() {
-  return <ContinueScreen />;
+export default function TitlePage() {
+  return <TitleScreen />;
 }

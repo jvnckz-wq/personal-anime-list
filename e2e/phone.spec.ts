@@ -2,7 +2,7 @@ import { expect, test } from "@playwright/test";
 import { sampleList } from "./support/catalog";
 import { mockApis, seedList } from "./support/mock-api";
 
-const ROUTES = ["/", "/discover", "/list", "/anime/1", "/stats"];
+const ROUTES = ["/", "/continue", "/discover", "/list", "/anime/1", "/stats"];
 
 for (const width of [360, 390, 768, 1280]) {
   test.describe(`${width}px`, () => {

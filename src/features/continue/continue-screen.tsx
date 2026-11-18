@@ -2,6 +2,7 @@
 
 import { useEffect, useRef } from "react";
 import { EmptyState, SkewButton, SkewLink } from "@/components/ui/primitives";
+import { Ransom } from "@/components/ui/ransom";
 import { SaveSlot, SlotRow } from "@/components/ui/slots";
 import { shortTitle } from "@/lib/format";
 import { useList } from "@/lib/store/list-context";
@@ -29,7 +30,7 @@ export function ContinueScreen() {
   return (
     <section className="screen" aria-labelledby="t-continue">
       <h1 className="page-title" id="t-continue" tabIndex={-1}>
-        Continue
+        <Ransom text="Continue" seed={11} />
       </h1>
       {!ready ? (
         <div className="screen" aria-hidden="true">

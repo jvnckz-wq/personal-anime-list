@@ -1,351 +1,308 @@
 ---
 name: PAL
-description: A personal anime watchlist that plays like a game's save-select screen, drawn as a manga page.
+description: A personal anime watchlist that plays like a game's title menu, cut from red, ink and paper.
 colors:
-  page-ink: "#0F0F12"
-  ink: "#141418"
-  paper: "#F3F3EF"
-  paper-lit: "#FFFFFF"
-  signal-yellow: "#FFD60A"
-  signal-yellow-hover: "#FFE24D"
-  gutter-track: "#2B2B33"
-  gutter-line: "#3C3C46"
-  gutter-slate: "#8A8A94"
-  gutter-muted: "#A9A9B2"
-  paper-muted: "#55555E"
-  paper-track: "#D6D6D0"
-  paper-line: "#B5B5AE"
-  paper-slate: "#6E6E76"
+  red: "#D7141A"
+  red-band: "rgb(0 0 0 / .09)"
+  red-hot: "#FF3B3F"
+  ink: "#0B0B0D"
+  ink-2: "#1C1C21"
+  ink-3: "#34343B"
+  ink-muted: "#BDBDC6"
+  paper: "#F4F1EA"
+  paper-dim: "#D9D4C9"
+  paper-muted: "#4A4A52"
 typography:
-  display:
-    fontFamily: "Dela Gothic One, Zen Kaku Gothic New, system-ui, sans-serif"
-    fontSize: "58px"
+  ransom:
+    fontFamily: "Anton, Abril Fatface, Archivo Black, Bowlby One SC, Dela Gothic One"
+    fontSize: "clamp(48px, 7.4vw, 104px)"
     fontWeight: 400
     lineHeight: 1
-  headline:
-    fontFamily: "Dela Gothic One, Zen Kaku Gothic New, system-ui, sans-serif"
-    fontSize: "56px"
+  logo:
+    fontFamily: "Anton, Abril Fatface, Archivo Black, Bowlby One SC, Dela Gothic One"
+    fontSize: "clamp(64px, 7.4vw, 112px)"
     fontWeight: 400
     lineHeight: 1
-    letterSpacing: "1px"
+  menu-entry:
+    fontFamily: "Anton, Abril Fatface, Archivo Black, Bowlby One SC, Dela Gothic One"
+    fontSize: "clamp(30px, 3vw, 44px)"
+    fontWeight: 400
+    lineHeight: 1
   title:
     fontFamily: "Dela Gothic One, Zen Kaku Gothic New, system-ui, sans-serif"
-    fontSize: "40px"
+    fontSize: "clamp(26px, 3vw, 42px)"
     fontWeight: 400
-    lineHeight: 1.12
-  section:
+    lineHeight: 1.1
+  detail-title:
     fontFamily: "Dela Gothic One, Zen Kaku Gothic New, system-ui, sans-serif"
-    fontSize: "22px"
+    fontSize: "clamp(32px, 3.6vw, 52px)"
     fontWeight: 400
-    lineHeight: 1.2
-  title-row:
+    lineHeight: 1.08
+  row-title:
     fontFamily: "Zen Kaku Gothic New, system-ui, sans-serif"
-    fontSize: "22px"
-    fontWeight: 700
+    fontSize: "20px"
+    fontWeight: 900
     lineHeight: 1.25
   body:
     fontFamily: "Zen Kaku Gothic New, system-ui, sans-serif"
     fontSize: "16px"
     fontWeight: 500
     lineHeight: 1.6
+  body-strong:
+    fontFamily: "Zen Kaku Gothic New, system-ui, sans-serif"
+    fontSize: "15px"
+    fontWeight: 700
+    lineHeight: 1.5
   button:
-    fontFamily: "Zen Kaku Gothic New, system-ui, sans-serif"
+    fontFamily: "Anton, system-ui, sans-serif"
     fontSize: "20px"
-    fontWeight: 700
-    letterSpacing: "2px"
+    fontWeight: 400
+    letterSpacing: ".06em"
   label:
-    fontFamily: "Zen Kaku Gothic New, system-ui, sans-serif"
+    fontFamily: "Anton, system-ui, sans-serif"
     fontSize: "15px"
-    fontWeight: 700
-    letterSpacing: "2px"
-  meta:
-    fontFamily: "Zen Kaku Gothic New, system-ui, sans-serif"
-    fontSize: "15px"
-    fontWeight: 500
-  clock:
-    fontFamily: "Dela Gothic One, Zen Kaku Gothic New, system-ui, sans-serif"
-    fontSize: "64px"
     fontWeight: 400
-    lineHeight: 1
-  stamp-large:
-    fontFamily: "Dela Gothic One, Zen Kaku Gothic New, system-ui, sans-serif"
-    fontSize: "44px"
-    fontWeight: 400
+    letterSpacing: ".08em"
   numeral:
-    fontFamily: "Dela Gothic One, Zen Kaku Gothic New, system-ui, sans-serif"
-    fontSize: "34px"
+    fontFamily: "Anton, system-ui, sans-serif"
+    fontSize: "58px"
     fontWeight: 400
-    lineHeight: 1
-  heading-small:
-    fontFamily: "Dela Gothic One, Zen Kaku Gothic New, system-ui, sans-serif"
-    fontSize: "28px"
+    lineHeight: 0.9
+  file-no:
+    fontFamily: "Anton, system-ui, sans-serif"
+    fontSize: "88px"
     fontWeight: 400
-    lineHeight: 1.15
-  body-large:
-    fontFamily: "Zen Kaku Gothic New, system-ui, sans-serif"
-    fontSize: "18px"
-    fontWeight: 500
-    lineHeight: 1.6
+    lineHeight: 0.8
+  clock:
+    fontFamily: "Anton, system-ui, sans-serif"
+    fontSize: "clamp(72px, 8vw, 128px)"
+    fontWeight: 400
+    lineHeight: 0.9
+  stamp:
+    fontFamily: "Anton, system-ui, sans-serif"
+    fontSize: "30px"
+    fontWeight: 400
   key:
     fontFamily: "Zen Kaku Gothic New, system-ui, sans-serif"
-    fontSize: "14px"
-    fontWeight: 700
-    letterSpacing: "1px"
-  caption:
-    fontFamily: "Zen Kaku Gothic New, system-ui, sans-serif"
-    fontSize: "12px"
-    fontWeight: 700
+    fontSize: "13px"
+    fontWeight: 900
 rounded:
   none: "0px"
 spacing:
-  block: "4px"
-  tight: "10px"
-  stack: "14px"
-  gutter: "20px"
-  section: "36px"
+  tight: "6px"
+  row: "14px"
+  gutter: "24px"
+  section: "32px"
   shell: "48px"
+  strip: "52px"
 components:
   button-primary:
-    backgroundColor: "{colors.signal-yellow}"
+    backgroundColor: "{colors.paper}"
     textColor: "{colors.ink}"
     typography: "{typography.button}"
     rounded: "{rounded.none}"
-    padding: "0 32px"
+    padding: "0 28px"
     height: "52px"
-  button-primary-hover:
-    backgroundColor: "{colors.signal-yellow-hover}"
-  button-outline:
-    backgroundColor: "transparent"
+  button-primary-on-paper:
+    backgroundColor: "{colors.ink}"
+    textColor: "{colors.paper}"
     typography: "{typography.button}"
     rounded: "{rounded.none}"
-    padding: "0 32px"
+    padding: "0 28px"
     height: "52px"
-  button-muted:
-    backgroundColor: "{colors.gutter-track}"
-    textColor: "{colors.paper}"
-    padding: "0 32px"
-    height: "52px"
+  button-primary-hover:
+    backgroundColor: "{colors.red-hot}"
+    textColor: "{colors.ink}"
   button-small:
     padding: "0 18px"
     height: "44px"
-  menu-item:
+  menu-entry-active:
+    backgroundColor: "{colors.ink}"
+    textColor: "{colors.paper}"
+    typography: "{typography.menu-entry}"
+    padding: "10px 76px 10px 20px"
+  section-tab:
+    backgroundColor: "{colors.ink}"
+    textColor: "{colors.paper}"
+    typography: "{typography.label}"
+    padding: "0 14px"
+    height: "36px"
+  section-tab-current:
     backgroundColor: "{colors.paper}"
-    textColor: "{colors.ink}"
-    padding: "14px 22px"
-  menu-item-active:
-    backgroundColor: "{colors.signal-yellow}"
-    textColor: "{colors.ink}"
-  tab:
-    backgroundColor: "{colors.paper}"
-    textColor: "{colors.ink}"
-    padding: "0 22px"
-    height: "48px"
-  tab-selected:
-    backgroundColor: "{colors.signal-yellow}"
     textColor: "{colors.ink}"
   save-slot-hero:
     backgroundColor: "{colors.paper}"
     textColor: "{colors.ink}"
-    padding: "40px"
+    padding: "34px 48px 36px 34px"
   save-slot-row:
+    backgroundColor: "{colors.ink}"
+    textColor: "{colors.paper}"
+    padding: "14px 34px 14px 20px"
+  slip:
     backgroundColor: "{colors.paper}"
     textColor: "{colors.ink}"
-    padding: "18px 30px 18px 22px"
-  save-slot-row-selected:
-    backgroundColor: "{colors.paper-lit}"
+    padding: "26px 30px 28px"
   search-field:
-    backgroundColor: "transparent"
-    textColor: "{colors.paper}"
-    padding: "4px 14px 4px 22px"
-    height: "50px"
+    backgroundColor: "{colors.paper}"
+    textColor: "{colors.ink}"
+    padding: "0 18px 0 22px"
+    height: "60px"
   stamp-clear:
-    backgroundColor: "{colors.signal-yellow}"
-    textColor: "{colors.ink}"
-    padding: "2px 18px"
+    backgroundColor: "{colors.paper}"
+    textColor: "{colors.red}"
+    typography: "{typography.stamp}"
+    padding: "6px 14px"
   toast:
-    backgroundColor: "{colors.signal-yellow}"
-    textColor: "{colors.ink}"
-    padding: "12px 14px 12px 24px"
+    backgroundColor: "{colors.ink}"
+    textColor: "{colors.paper}"
+    padding: "12px 12px 12px 22px"
 ---
 
 # Design System: PAL
 
 ## Overview
 
-**Creative North Star: "The Save Select Screen"**
+**Creative North Star: "The Title Menu"**
 
-PAL is a game's save-select screen drawn as a manga page. Every anime on the list is a save file. Each file has a permanent number, a play time, a last-saved time, and progress drawn as memory blocks. A finished file gets a CLEAR! stamp that slams on like a sound effect. The four sections are menu entries, not database pages: `01 CONTINUE`, `02 NEW GAME`, `03 LOAD GAME`, `04 PLAYER DATA`. The menu shapes how the app behaves:
-- A bracket cursor marks the selected slot.
-- Arrows move, Enter opens, Esc backs out.
-- 1–4 jump between sections, / searches, + logs an episode and U undoes.
+PAL opens on a game's title screen, not a dashboard. The left half is the main menu: a ransom-note `PAL` logo and four entries, `01 CONTINUE`, `02 NEW GAME`, `03 LOAD GAME` and `04 PLAYER DATA`. The selected entry is struck through with an ink banner and an arrow. The right half shows the latest save behind a diagonal cut: its poster in black and white halftone, the file number in huge outline numerals, and a paper slip carrying the title, the episode readout, memory blocks and **Watched EP n**. The daily loop stays one press long, even from the title screen.
 
-The world is a manga page with the lights off. The page is ink and the panels are paper. Panels are cut as trapezoids, with alternating slants down a list. Screentone dots fade into the far corner of each panel. Signal yellow is the only accent: it means selected, confirmed or cleared. The energy borrows from Persona 5's menus but not their look. There is no red, no ransom-note lettering and no calling cards. The energy lives in motion that answers the owner:
-- on every screen change a yellow slash with speed lines crosses the page, the new screen is cut in behind it, the title strikes in and panels are dealt in a few at a time
-- the chosen menu entry strikes in trailing speed lines
-- +1 punches radial speed lines out of the panel
-- CLEAR floods the panel in a yellow burst before the stamp slams on
+The four entries are sections of a save file. Every anime on the list is a save file with a permanent number, a play time, a last-saved time and progress drawn as memory blocks. A finished file gets a CLEAR! stamp that slams on.
 
-Density is moderate and the daily loop is one action. Continue puts the cursor on the latest save. Its primary button reads "Watched EP 13". Every write can be undone from the toast. Clarity wins over style: the motion is short and state-driven, and every effect becomes a fade under reduced motion.
+The world is a red poster. The page is a red ground cut by darker diagonal bands. Ink slabs and off-white paper slips sit on it at slight tilts. Screen titles are ransom-note lettering, each letter cut from a different face. Poster art supplies every other colour.
 
-**Key Characteristics:**
-- Ink page, paper panels, one signal-yellow accent; poster art supplies every other colour
-- Trapezoid panel cuts, screentone, speed lines: a manga page, not a SaaS card kit
-- Dela Gothic One for names, titles and identifying numbers; Zen Kaku Gothic New for everything you read or operate
-- Save-file vocabulary throughout: file, Continue, New game, Load game, Player data, Save game, Cleared, Delete file, Back up / Restore
-- A bracket cursor that follows focus, never hover, and a button guide like a game's control hints
-- Flat: no shadows, gradients or blur; depth comes from ink against paper
+The menu shapes how the app behaves:
+- Arrows move, Enter opens, Esc backs out (a section returns to the title screen and the cursor lands on the entry you came from).
+- 1–4 jump straight to a section, / opens the search, + logs an episode (from the title screen it logs the latest save), U undoes.
+- A wipe of paper, ink and hot red crosses the page on every screen change; the new screen appears behind the ink slab, its title drops in letter by letter and its panels are dealt in.
+
+The look is inspired by the energy of stylish game menus, and it is PAL's own: no franchise characters, logos, calling cards or star emblem. The big art is always the owner's own anime.
+
+**Key characteristics:**
+- Red ground, ink slabs, paper slips; hot red only as an accent on ink
+- Ransom-note lettering for the logo, menu entries and screen titles only; content is set in readable faces
+- Outline numerals as PAL's emblem: file numbers, row numbers, the big number behind the latest save
+- Everything leans: skewed buttons, tabs and tags, tilted slips and posters, trapezoid slab cuts
+- Flat: no soft shadows, gradients or blur; depth comes from ink and paper against red
 
 ## Colors
 
-Ink and paper with a single signal yellow. Tokens flip with context: every panel switches to ink-on-paper values.
+### Grounds
+- **Red** (#D7141A): the page. Diagonal bands of black at 9% cross it at 115°. Paper text on it reads 5.3:1.
+- **Ink** (#0B0B0D): rows, empty states, Player data boxes, the toast, the guide bar and the menu banner. **Ink 2** (#1C1C21) is hover on ink; **Ink 3** (#34343B) is unfilled blocks and bars on ink.
+- **Paper** (#F4F1EA): the hero save slot, the title slip, the save panel, dialogs, the data box, primary buttons on red and ink. **Paper dim** (#D9D4C9) is unfilled blocks on paper.
 
-### Primary
-- **Signal Yellow** (#FFD60A): the only accent. It marks the active menu entry and selected tab, primary buttons, the bracket cursor, the CLEAR! stamp, the toast, the marker swipe under a selected file number, and the focus ring on ink. Ink text on it reads 13.0:1.
-- **Signal Yellow Hover** (#FFE24D): hover state of primary buttons only.
+### Text
+- On red: paper only. There is no muted text on red; hierarchy comes from size and weight.
+- On ink: paper, with **Ink muted** (#BDBDC6, 10:1) for secondary text.
+- On paper: ink, with **Paper muted** (#4A4A52, 7.9:1) for secondary text.
 
-### Neutral (the ink page)
-- **Page Ink** (#0F0F12): the page itself and the gutters between panels.
-- **Gutter Track** (#2B2B33): unfilled bars, status tags and kbd keys on the page.
-- **Gutter Line** (#3C3C46): rules on the page, such as the guide divider.
-- **Gutter Slate** (#8A8A94): borders of chips, selects and the search field on ink (5.6:1).
-- **Gutter Muted** (#A9A9B2): secondary text on ink (8.2:1).
+### Accents
+- **Red hot** (#FF3B3F): the accent on ink. Numbers in the section tabs, the latest-episode block, genre bars, score columns, record headings, the hover of primary buttons on red and ink. It reads 5.6:1 on ink.
+- **Red** (#D7141A) on paper: the latest-episode block, percentages, the slip kicker, the CLEAR! lettering. It reads 4.7:1 on paper.
 
-### Neutral (the paper panels)
-- **Paper** (#F3F3EF): every panel, save slot, menu item and tab.
-- **Paper Lit** (#FFFFFF): a slot row under hover or the cursor.
-- **Ink** (#141418): text, filled memory blocks and the focus ring on paper.
-- **Paper Muted** (#55555E): secondary text on paper (6.6:1).
-- **Paper Slate** (#6E6E76): resting file numbers and the edges of score chips (4.5:1).
-- **Paper Track** (#D6D6D0) and **Paper Line** (#B5B5AE): unfilled blocks and the fills of steppers and score chips.
+### Named rules
+**The Context Flip Rule.** Every surface sets its own tokens (`--fg`, `--muted`, `--track`, `--fill`, `--pri-bg`, `--pri-fg`, `--ring`). The red ground and ink flip to paper text; paper flips to ink text. Never hard-code a text colour that only works on one side.
 
-### Named Rules
-**The One Signal Rule.** Signal yellow is the only chromatic colour PAL owns. More emphasis means yellow or more size, never a second hue. Never use red: it belongs to the reference, not to PAL.
-
-**The Context Flip Rule.** Colour tokens are set per context. On the page, text is paper. Inside a panel, text, borders and the focus ring are ink. Never hard-code a text colour that only works on one side.
-
-**The Posters Bring the Colour Rule.** Anime posters are the only multicolour on screen.
+**The Posters Bring the Colour Rule.** Anime posters are the only multicolour on screen. The title art is the latest poster in black and white with a red halftone.
 
 ## Typography
 
-**Display Font:** Dela Gothic One (with Zen Kaku Gothic New, system-ui)
-**Body Font:** Zen Kaku Gothic New 500 and 700
+**Ransom set:** Anton, Abril Fatface, Archivo Black, Bowlby One SC and Dela Gothic One, cut letter by letter. **UI face:** Anton (condensed caps). **Title face:** Dela Gothic One. **Body face:** Zen Kaku Gothic New 500, 700 and 900.
 
-**Character:** a heavy, wide display face with the weight of manga lettering, paired with a clean Japanese-Latin gothic that stays quiet at operating sizes.
+### Ransom lettering
+Used for the `PAL` logo, the four menu entries and the screen titles, nowhere else. Each letter is its own tile, from three kinds only: paper with ink, ink with paper, and red with paper lettering and an ink edge (the mix the owner picked from LOAD GAME). No two neighbouring letters share a kind. Each takes a face, a tilt (±8°, ±5° on the menu) and a size (0.84–1.14em) from a deterministic hash, so a word always cuts the same way on the server and in every browser. The first letter is always a paper tile. Screen readers get the plain word once; the tiles are hidden.
 
 ### Hierarchy
-- **Display** (58px; 34px on phone): the `PAL.` logo.
-- **Headline** (56px, uppercase; 40px on phone): screen titles.
-- **Title** (40px, line-height 1.12; 26px on phone): the anime title on the Continue hero and on file details.
-- **Section** (22px, display face, sentence case): section headings such as "Also in progress", "About" and "Top genres".
-- **Title Row** (700, 22px; 18px on phone): titles in save-slot rows.
-- **Body** (500, 16px, line-height 1.6): running text, kept to about 65ch; synopses use 18px.
-- **Button** (700, 20px, 2px tracking, uppercase; 16px small): button labels.
-- **Label** (700, 15px, 2px tracking, uppercase): field labels such as Genre, Type, Status, Episodes and My score, and save stats (File, Play time, Last saved).
-- **Meta** (500, 15px, tabular figures): readouts such as "Episode 12 of 28", meta lists, legends and toasts.
-- **Numerals** (display face, 34px): file numbers. **Clock** (64px; 44px on phone): the Player data play time. **Heading small** (28px): empty-state and dialog titles, phone titles. **Body large** (18px): synopses, tabs, selects. **Key** (14px): kbd keys. **Caption** (12px): phone menu labels. **Stamp large** (44px): CLEAR! on a clearing hero.
+- **Screen titles** (ransom, `clamp(48px, 7.4vw, 104px)`), **logo** (ransom, up to 112px), **menu entries** (calm ransom, `clamp(30px, 3vw, 44px)`).
+- **Anime titles**: Dela Gothic One, 26–42px on the hero and slip, 32–52px on details. Never ransom: content must read.
+- **Row titles**: Zen Kaku 900, 20px (17px on phone).
+- **Body**: Zen Kaku 500, 16px, line-height 1.6; synopses 18px at 700; readouts 15px at 700 with tabular figures.
+- **Chrome**: Anton uppercase with .06–.1em tracking for buttons (20px; 17px small), tabs (18px), labels (15px), section tags (22px), the guide (14px).
+- **Numerals**: Anton outline numerals for file numbers (88px hero, 64px panel), row numbers (58px) and the big title number (up to 260px). The play-time clock is Anton up to 128px.
 
-### Named Rules
-**The Display Means Identity Rule.** The display face carries names, titles and numbers that identify a file. Data you read or edit uses the body face: last saved, scores in rows, readouts.
+### Named rules
+**The Ransom Is Chrome Rule.** Ransom lettering names places (PAL, the four sections). It never carries content, data or controls.
 
-**The Caps Are Chrome Rule.** Uppercase belongs to menu items, buttons, tabs, field labels and the stamp. Content stays in sentence case: titles, sections, meta, toasts, placeholders.
+**The Caps Are Chrome Rule.** Uppercase belongs to buttons, tabs, labels, section tags and the stamp. Content stays in sentence case.
 
 ## Layout
 
-On desktop (1024px and up), a centred 1280px shell holds a sticky 260px sidebar and the main column, with 48px padding and a 48px gap. The sidebar holds:
-- the logo
-- the menu: four equal-width entries on one edge
-- the button guide
+Fixed **top strip** (52px; 48px on phone): the `PAL // SAVE SELECT` tag links home on the left; the four section tabs sit in the middle (hidden on the title screen, which draws the big menu); `LOCAL SAVE · N FILES` sits on the right. Inside a section the strip turns solid red so content scrolls under it cleanly.
 
-The main column opens with the screen title. Screens stack sections 36px apart. Rows sit 14px apart. Poster grids auto-fill 170px columns. The page reserves the scrollbar gutter, so the centred layout never shifts between screens. Skewed controls keep about 6px of slack so a lean never clips its own corner, and scroll strips pad 8px so focus rings are never cut.
+Fixed **guide bar** (52px, ink) at the bottom: kbd keys with their actions for the current screen, and the clock on the right. Hidden on phone.
 
-Search lives only inside New game, as one query bar: search, then browse tabs, then a row of genre and type. Elsewhere, / opens it. Load game has its own "Find a file" for the owner's list.
+**Title screen**: a two-column grid, 46/54. The left column centres the logo and the menu. The right column is a paper band cut on a diagonal, the latest poster behind it, the outline file number top-right and the slip bottom-left, tilted −2.2°.
 
-Below 1024px, the layout becomes one column with 16px gutters:
-- The menu becomes a fixed bottom bar of four equal 52px items with 12px labels. The trail is removed there.
-- Content keeps 110px of bottom clearance, and scroll-padding keeps focused controls above the bar.
-- New game's filters sit behind a Filters toggle.
-- Tabs and chips become horizontal scroll strips.
-- File details puts the save panel right under the title.
+**Sections**: a centred 1280px column with 48px side padding. Screens stack 32px apart; rows sit 14px apart; poster cards auto-fill 176px columns. File details is poster, head and save panel in three columns (two below 1180px).
+
+**Phone (below 1024px)**: one column with 16px gutters. The section tabs become a fixed 60px ink bottom bar with icons and 12px labels; the current one is red. The title screen stacks logo, menu, then the latest save, so **Watched EP n** stays in the first screen. The toast moves to the top. Tabs and chips scroll sideways; New game's filters sit behind a toggle.
 
 ## Elevation & Depth
 
-Flat. There are no shadows, gradients, glows or blur. Depth is ink against paper: panels float as paper shapes on the ink page, and their trapezoid cuts make the gutters read as part of a manga page. Screentone fading toward a panel's far corner adds texture, not depth.
-
-### Named Rules
-**The Flat Page Rule.** To make something stand out, give it paper-lit, yellow, or size. Never add a box-shadow, filter or backdrop blur.
+Flat. Depth is ink and paper against red, and tilt. No box shadows except one 1px rule under the solid top strip; no gradients except the halftone dots and the stripe bands; no blur.
 
 ## Shapes
 
-Sharp, slanted and cut. Every radius is 0px.
-- **Panel cuts:** the Continue hero is cut with a right-side slant (96% at the bottom). Rows alternate a slight left and right slant down a list. Other panels take a small bottom-right slant. Cut panels pad their slanted side so content never meets the cut.
-- **Skew:** buttons, menu items, tabs, chips, tags, kbd keys and the search field lean -10°, and their text is counter-skewed upright. Large posters lean -6°, and grid posters are parallelograms.
-- **Memory blocks:** progress is drawn as discrete blocks leaning -20°: one per episode up to 26 (two cours), and two segments beyond that.
-- **Bracket cursor:** four 26px yellow corners, 4px strokes, set 10px outside the selected slot.
+Every radius is 0. Shapes are cut and leaned.
+- **Skew**: buttons, tabs, chips, tags, kbd keys, the search field and the section tabs lean −10° to −12°, with their text counter-skewed upright.
+- **Slabs**: rows are trapezoids that alternate their lean down a list; the hero is cut on the right (97% at the bottom); empty states and Player data boxes take a small bottom-right cut.
+- **Tilt**: the title slip −2.2°, the hero poster −3°, the details poster −3° in a 6px paper frame, cleared posters alternate −3° and 2.5°.
+- **Memory blocks**: discrete blocks leaning −20°, one per episode up to 26; the latest watched block is red. Longer series draw two segments.
 
 ## Components
 
-Components are snappy and physical. Hover changes tone, press sinks 2px, and nothing moves on hover.
-
 ### Buttons
-- **Primary:** signal yellow with ink text and a 2px ink edge. It carries the one main action: "Watched EP 13", "+1 EP", "Save game", "No".
-- **Outline:** transparent with a 2px current-text border. Used for secondary actions such as "Open file", "Plan to watch", "Back" and "Yes, delete".
-- **Muted:** track fill, for tertiary actions such as "Start" and "Delete file".
-- **Small:** 44px tall, the minimum target.
+- **Primary**: paper on red and ink, ink on paper. Hover turns hot red (on red and ink) or red (on paper). Press sinks 2px.
+- **Outline**: a 3px inset border in the current text colour; hover fills it.
+- **Muted**: ink 2, for tertiary actions. On the save panel, Delete file is an ink outline.
+- **Small**: 44px tall, the minimum target.
 
-### Navigation
-- **Menu:** four equal paper parallelograms on one edge, with ink display-face labels. The active entry is yellow with speed lines trailing behind it.
-- **Button guide:** kbd keys with their actions. It adapts to the screen and hides on phone.
+### Title menu (signature)
+Each entry is a number, a calm ransom label and a one-line description that appears when the entry is selected. The selected entry gets an ink banner that grows from the left (220ms), a paper arrow and a broken paper border (the same one selected slots use). Hover moves focus, so the cursor and the keyboard never disagree. Arrows wrap.
 
-### Tabs and chips
-- **Tabs:** paper with ink display-face labels; the selected tab is yellow. They follow the ARIA tablist pattern with roving focus, and counts read with a separator.
-- **Genre chips:** outlined (Gutter Slate) and toggled with `aria-pressed`; the selected chip is yellow.
+### Section tabs
+Ink parallelograms in the top strip with a hot red number; the current section is paper with a red number. On phone, a bottom bar.
 
-### Inputs
-- **Search field:** a skewed frame with a 2px Gutter Slate border. It stays ink while focused, so typed text stays visible, with a yellow border and ring. Esc clears it, then leaves it.
-- **Select:** an unskewed native select with a 2px slate border.
-- **Score picker:** native radios drawn as 44px chips with a slate inner edge; the selected chip is yellow with an ink inner edge.
-- **Episode stepper:** −, the count, and +. + is disabled at the known total.
-
-### Save slots (signature)
-- **Hero (Continue):**
-  - A paper trapezoid with the poster, file number and save stats (play time, last saved).
-  - The title, the episode readout with percent, and memory blocks.
-  - "Watched EP n" and "Open file" buttons.
-- **Row (Continue and Load game):**
-  - The file number, poster, title, readout and blocks.
-  - A +1 EP button while watching, or Start for plan-to-watch.
-- **Poster card (New game, recommendations, cleared wall):** a parallelogram poster, title and meta, plus one action or a status tag.
-- **Keyboard:** slots are focusable; Enter opens the file and + logs an episode.
-
-### Bracket cursor (signature)
-It follows focus, never hover, and glides in 160ms. It snaps in from outside on each new slot. After a screen change it lands on the slot you last opened, or the first slot. It is the slot's focus indicator.
+### Save slots
+- **Hero (Continue)**: paper, poster tilted with an ink frame, outline file number, play time and last saved, the title, the episode readout with percent, memory blocks, **Watched EP n** and **Open file**.
+- **Row (Continue, Load game)**: ink trapezoid, outline row number that turns hot red on hover and focus, poster, title, readout, blocks, and **+1 EP** or **Start**.
+- **Poster card (New game, recommendations, cleared wall)**: a parallelogram poster with an ink title strip overlapping its foot, meta, then one action or a status tag.
+- **Selection** (hover and arrow keys look the same; hovering a slot selects it, so there is only ever one cursor): the title menu's broken border, owner-approved and kept exactly: a 4px border 8-9px outside the slab, cut by a slanted clip (10px down at the top left, 16px in at the bottom right, 8px in at the bottom left) so it shows as long pieces, never a closed box. Rows take it in paper; the featured hero on Continue takes it in ink. A poster card gets a parallelogram frame, ink outside and paper inside, lifts 4px and tilts, and its title strip turns paper.
 
 ### CLEAR! stamp (signature)
-Yellow with a 3px ink edge, display face, rotated -7°, with an exclamation mark. It slams in once on clear, after a yellow speed-line burst floods the panel. On the save panel it sits low-left, clear of the stats.
+Paper tile, red Anton lettering, a 3px ink edge, rotated −8°. When a file clears, the slot floods red with ink rays (760ms) and the stamp slams in from 3× scale (460ms, after 260ms).
 
 ### Toast
-- A yellow cut-corner bar carrying the action's message and, when it applies, Undo (U).
-- On desktop it sits bottom-left, clear of the +1 column; on phone it sits at the top.
-- Undoable toasts stay 6 seconds. Messages name the show and any side effect.
+An ink slab bottom-left (top on phone) with the message and, when it applies, a paper **Undo U** button. Undoable toasts stay 6 seconds.
 
 ### Dialog
-A native modal on paper. Destructive questions name the file ("Delete file 08?") and put focus on No.
+Paper, slightly cut, over an 80% ink backdrop. Destructive questions name the file and put focus on **No**.
+
+## Motion
+
+- **Screen wipe** (620ms, `cubic-bezier(.7, 0, .3, 1)`): paper, ink and a narrow hot red band sweep left to right, skewed −18°. The new screen appears at 260ms, behind the ink.
+- **Title drop**: ransom letters drop in 28ms apart after the wipe, from a counter-tilt and 1.4× scale (420ms).
+- **Deal-in**: slabs, cards and menu entries slide 40px from the left and fade in, a few at a time (380ms).
+- **+1**: a red frame flashes inside the slot and the new block pops (380–420ms).
+- **Reduced motion**: the wipe becomes a short fade through ink; every entrance becomes a 240ms fade.
+
+## App icon
+
+- **Browser tab** (`src/app/favicon.ico` at 16, 32 and 48px, `src/app/icon.png` at 192px): one paper tile with an ink Anton **P**, tilted −6° on red. It stays readable at 16px.
+- **Home screen** (`src/app/apple-icon.png`, 180px): the full ransom **PAL** (a paper tile with an Abril Fatface P, an ink tile with an Anton A, a red tile with an ink edge and an Archivo Black L) on the striped red ground.
 
 ## Do's and Don'ts
 
 ### Do:
-- **Do** flip tokens by context: ink-on-paper inside panels, paper-on-ink on the page, including the focus ring.
-- **Do** keep signal yellow (#FFD60A) as the only accent, and put ink text on it.
-- **Do** tie every motion to a state change (screen change, selection, +1, CLEAR), keep it to 200–400ms, and make it a fade under reduced motion.
-- **Do** give every file a permanent number and keep lists steady while the owner acts in them.
-- **Do** pair progress with a text readout and an accessible label.
-- **Do** keep touch targets at least 44px, and pad scroll strips so focus rings are never clipped.
-- **Do** make every write undoable, and say any side effect in the toast.
+- **Do** keep **Watched EP n** one press from the title screen and the + key working there.
+- **Do** flip tokens by context; check contrast on red, ink and paper separately.
+- **Do** keep ransom lettering to the logo, menu entries and screen titles.
+- **Do** use the owner's posters as the only imagery.
+- **Do** keep touch targets at least 44px and every write undoable.
 
 ### Don't:
-- **Don't** use red, ransom-note lettering or calling-card motifs; borrow the energy of the reference, never its look.
-- **Don't** put a global search above every screen; search lives in New game and opens with /.
-- **Don't** use yellow for text or focus rings on paper; use ink.
-- **Don't** add shadows, gradients, blur or rounded corners.
-- **Don't** set content in uppercase, or use tracked-caps eyebrows above sections.
-- **Don't** show status codes or system words in user-facing copy.
+- **Don't** use any game franchise's characters, logos, calling cards or star emblem.
+- **Don't** set anime titles, data or controls in ransom lettering.
+- **Don't** put muted or red text on the red ground; it fails contrast.
+- **Don't** add soft shadows, glows, blur or rounded corners.
+- **Don't** set content in uppercase.

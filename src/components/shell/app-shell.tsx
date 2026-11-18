@@ -2,29 +2,53 @@
 
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { type RefObject, Suspense, createContext, useCallback, useContext, useEffect, useRef, useState } from "react";
+import { Suspense, createContext, useCallback, useContext, useEffect, useRef, useState } from "react";
 import { ListProvider, useList } from "@/lib/store/list-context";
 import { retrigger } from "../ui/primitives";
 import { ToastProvider } from "./toast";
 
-const MENU = [
-  { href: "/", screen: "continue", n: "01", label: "CONTINUE" },
-  { href: "/discover", screen: "new", n: "02", label: "NEW GAME" },
-  { href: "/list", screen: "files", n: "03", label: "LOAD GAME" },
-  { href: "/stats", screen: "records", n: "04", label: "PLAYER DATA" },
+export const MENU = [
+  { href: "/continue", screen: "continue", n: "01", label: "Continue", sub: "Pick up your latest save" },
+  { href: "/discover", screen: "new", n: "02", label: "New game", sub: "Search and browse every anime" },
+  { href: "/list", screen: "files", n: "03", label: "Load game", sub: "Every file on your list" },
+  { href: "/stats", screen: "records", n: "04", label: "Player data", sub: "Play time, clears and scores" },
 ] as const;
 
-type Screen = "continue" | "new" | "files" | "detail" | "records";
+export type Screen = "title" | "continue" | "new" | "files" | "detail" | "records";
 const screenOf = (p: string): Screen =>
-  p === "/" ? "continue" : p.startsWith("/discover") ? "new" : p.startsWith("/list") ? "files" : p.startsWith("/anime") ? "detail" : p.startsWith("/stats") ? "records" : "continue";
+  p === "/"
+    ? "title"
+    : p.startsWith("/continue")
+      ? "continue"
+      : p.startsWith("/discover")
+        ? "new"
+        : p.startsWith("/list")
+          ? "files"
+          : p.startsWith("/anime")
+            ? "detail"
+            : p.startsWith("/stats")
+              ? "records"
+              : "title";
 
 /** First visible match: Next keeps visited routes in the DOM, hidden. */
 const visible = <T extends HTMLElement>(selector: string) =>
   [...document.querySelectorAll<T>(selector)].find((el) => el.offsetParent !== null) ?? null;
 
-const NavContext = createContext<{ back: () => void }>({ back: () => {} });
-/** Back that stays inside PAL: history back after an in-app move, Continue otherwise. */
+const NavContext = createContext<{ back: () => void; from: Screen | null }>({ back: () => {}, from: null });
+/** Back that stays inside PAL, and the section the owner last came from. */
 export const useAppNav = () => useContext(NavContext);
+
+const ICONS: Record<string, React.ReactNode> = {
+  continue: <path d="M7 4l12 8-12 8z" />,
+  new: (
+    <>
+      <circle cx="11" cy="11" r="6.5" />
+      <path d="M16 16l4.5 4.5" />
+    </>
+  ),
+  files: <path d="M4 6h16M4 12h16M4 18h16" />,
+  records: <path d="M5 20V11M12 20V4M19 20v-6" />,
+};
 
 export function AppShell({ children }: { children: React.ReactNode }) {
   return (
@@ -33,14 +57,11 @@ export function AppShell({ children }: { children: React.ReactNode }) {
         {/* The route (pathname) is only known at request time on /anime/[id], so the shell streams in. */}
         <Suspense
           fallback={
-            <div className="shell">
-              <div className="side">
-                <span className="logo">
-                  PAL<span>.</span>
-                </span>
-              </div>
-              <main />
-            </div>
+            <header className="topstrip">
+              <span className="strip-tag strip-tag--ink">
+                <span>PAL // Save select</span>
+              </span>
+            </header>
           }
         >
           <Shell>{children}</Shell>
@@ -55,10 +76,12 @@ function Shell({ children }: { children: React.ReactNode }) {
   const router = useRouter();
   const { logEpisode, undo, entries } = useList();
   const screen = screenOf(pathname);
-  const [from, setFrom] = useState<Screen | null>(screen === "detail" ? null : screen);
+  const [from, setFrom] = useState<Screen | null>(null);
+  const [lastSection, setLastSection] = useState<Screen | null>(null);
+  if (screen !== "detail" && screen !== "title" && lastSection !== screen) setLastSection(screen);
   if (screen !== "detail" && from !== screen) setFrom(screen);
-  const mainRef = useRef<HTMLElement>(null);
   const wrapRef = useRef<HTMLDivElement>(null);
+  const wipeRef = useRef<HTMLDivElement>(null);
   const moves = useRef(0);
   const firstPath = useRef(pathname);
   const pendingSearch = useRef(false);
@@ -75,16 +98,30 @@ function Shell({ children }: { children: React.ReactNode }) {
       const slot = (e.target as HTMLElement).closest?.("main .slot") as HTMLElement | null;
       if (slot?.dataset.id) lastSlot.current[window.location.pathname] = slot.dataset.id;
     };
+    /* Hovering a slot (hero, row or poster card) selects it, so hover and the arrow keys share one cursor
+       and one look. Never while typing: the search box keeps its focus. */
+    const select = (e: Event) => {
+      const card = (e.target as HTMLElement).closest?.("main .slot") as HTMLElement | null;
+      const active = document.activeElement as HTMLElement | null;
+      if (!card || card === active || card.contains(active)) return;
+      if (active && (active.tagName === "INPUT" || active.tagName === "SELECT" || active.tagName === "TEXTAREA")) return;
+      card.focus({ preventScroll: true });
+    };
     document.addEventListener("click", remember, true);
-    return () => document.removeEventListener("click", remember, true);
+    document.addEventListener("mouseover", select);
+    return () => {
+      document.removeEventListener("click", remember, true);
+      document.removeEventListener("mouseover", select);
+    };
   }, []);
 
-  /* Screen change: speed lines streak across, the new screen arrives, and the cursor lands on a slot. */
+  /* Screen change: a red and ink wipe crosses the page, the new screen appears behind it, focus lands on a slot. */
   useEffect(() => {
     if (moves.current === 0 && pathname === firstPath.current) return;
     moves.current += 1;
-    retrigger(mainRef.current, "sweep");
+    retrigger(wipeRef.current, "run");
     retrigger(wrapRef.current, "enter");
+    window.scrollTo(0, 0);
     const frame = requestAnimationFrame(() =>
       requestAnimationFrame(() => {
         if (pendingSearch.current && pathname === "/discover") {
@@ -100,9 +137,9 @@ function Shell({ children }: { children: React.ReactNode }) {
         }
         const active = document.activeElement as HTMLElement | null;
         // A screen that placed focus itself (details focuses its title) keeps it.
-        if (active && active !== document.body && active.offsetParent !== null && !active.closest(".side")) return;
+        if (active && active !== document.body && active.offsetParent !== null && !active.closest(".topstrip")) return;
         const id = lastSlot.current[pathname];
-        const target = (id && visible(`main .slot[data-id="${id}"]`)) || visible("main .slot") || visible("main h1");
+        const target = visible("main [data-autofocus]") || (id && visible(`main .slot[data-id="${id}"]`)) || visible("main .slot") || visible("main h1");
         target?.focus({ preventScroll: true });
       }),
     );
@@ -120,11 +157,15 @@ function Shell({ children }: { children: React.ReactNode }) {
       const t = e.target as HTMLElement;
       if (document.querySelector("dialog[open]")) return;
       const typing = (t.tagName === "INPUT" && (t as HTMLInputElement).type !== "radio") || t.tagName === "SELECT" || t.tagName === "TEXTAREA";
+      const here = screenOf(window.location.pathname);
       if (e.key === "Escape") {
         if (typing) t.blur();
-        else if (window.location.pathname.startsWith("/anime/")) {
+        else if (here === "detail") {
           e.preventDefault();
           back();
+        } else if (here !== "title") {
+          e.preventDefault();
+          router.push("/");
         }
         return;
       }
@@ -149,9 +190,18 @@ function Shell({ children }: { children: React.ReactNode }) {
       }
       const slot = t.closest?.("main .slot") as HTMLElement | null;
       if (!slot) {
-        // With nothing selected, an arrow key picks the first slot.
+        // On the title screen, + logs the latest save, wherever the menu cursor is.
+        if ((e.key === "+" || e.key === "=") && here === "title") {
+          const latest = visible<HTMLElement>("main .slip[data-loggable]");
+          if (latest?.dataset.id) {
+            e.preventDefault();
+            logEpisode(Number(latest.dataset.id));
+          }
+          return;
+        }
+        // With nothing selected, an arrow key picks the first slot (or the menu on the title screen).
         if (e.key.startsWith("Arrow") && (t === document.body || t.tagName === "H1" || t.tagName === "MAIN")) {
-          const first = visible("main .slot");
+          const first = visible("main [data-autofocus]") || visible("main .slot");
           if (first) {
             e.preventDefault();
             first.focus();
@@ -183,35 +233,43 @@ function Shell({ children }: { children: React.ReactNode }) {
   const canLog = entries.some((e) => e.status === "watching");
 
   return (
-    <NavContext.Provider value={{ back }}>
+    <NavContext.Provider value={{ back, from: lastSection }}>
       <a href="#main" className="skip-link">
         Skip to content
       </a>
-      <div className="shell">
-        <div className="side">
-          <Link href="/" className="logo" aria-label="PAL, go to Continue">
-            PAL<span>.</span>
-          </Link>
-          <Menu active={menuOn} />
-          <Guide screen={screen} canLog={canLog} />
+      <header className="topstrip">
+        <Link href="/" className="strip-tag strip-tag--ink home-link" title="Back to the title screen">
+          <span>PAL // Save select</span>
+        </Link>
+        {screen === "title" ? null : <Menu active={menuOn} />}
+        <span className="strip-tag strip-tag--paper count-tag">
+          <span>
+            Local save · {entries.length} {entries.length === 1 ? "file" : "files"}
+          </span>
+        </span>
+      </header>
+      <main id="main" tabIndex={-1}>
+        <div ref={wrapRef} className="screen-wrap">
+          {children}
         </div>
-        <main ref={mainRef} id="main" tabIndex={-1}>
-          <SlotCursor mainRef={mainRef} />
-          <div ref={wrapRef} className="screen-wrap">
-            {children}
-          </div>
-        </main>
+      </main>
+      <Guide screen={screen} canLog={canLog} />
+      <div id="wipe" ref={wipeRef} aria-hidden="true">
+        <i />
+        <i />
+        <i />
       </div>
     </NavContext.Provider>
   );
 }
 
+/** Section menu in the top strip (a bottom bar on phone). The title screen draws the big one. */
 function Menu({ active }: { active: Screen | null }) {
   const refs = useRef<(HTMLAnchorElement | null)[]>([]);
   const onKeyDown = (e: React.KeyboardEvent, i: number) => {
-    if (!e.key.startsWith("Arrow")) return;
+    if (e.key !== "ArrowRight" && e.key !== "ArrowLeft") return;
     e.preventDefault();
-    const step = e.key === "ArrowDown" || e.key === "ArrowRight" ? 1 : -1;
+    const step = e.key === "ArrowRight" ? 1 : -1;
     refs.current[(i + step + MENU.length) % MENU.length]?.focus();
   };
   return (
@@ -229,8 +287,13 @@ function Menu({ active }: { active: Screen | null }) {
           onKeyDown={(e) => onKeyDown(e, i)}
         >
           <span>
-            <span className="n">{m.n} </span>
-            {m.label}
+            <svg className="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+              {ICONS[m.screen]}
+            </svg>
+            <span>
+              <span className="n">{m.n}</span>
+              {m.label}
+            </span>
           </span>
         </Link>
       ))}
@@ -239,126 +302,54 @@ function Menu({ active }: { active: Screen | null }) {
 }
 
 function Guide({ screen, canLog }: { screen: Screen; canLog: boolean }) {
-  const keys: [string, string][] = [
-    ["Arrows", "Move"],
-    ["Enter", "Open"],
-  ];
-  if (screen === "detail") keys.push(["Esc", "Back"]);
-  if ((screen === "continue" || screen === "files") && canLog) keys.push(["+", "Log episode"]);
-  keys.push(["1–4", "Menu"], ["/", "Search"]);
+  const keys: [string, string][] =
+    screen === "title"
+      ? [
+          ["↑ ↓", "Select"],
+          ["Enter", "Confirm"],
+          ...(canLog ? ([["+", "Log episode"]] as [string, string][]) : []),
+          ["1–4", "Jump"],
+        ]
+      : [
+          ["Arrows", "Move"],
+          ["Enter", "Open"],
+          ...((screen === "continue" || screen === "files" || screen === "detail") && canLog ? ([["+", "Log episode"]] as [string, string][]) : []),
+          ["/", "Search"],
+          ["Esc", "Back"],
+        ];
   return (
-    <ul className="guide" aria-label="Keyboard controls">
-      {keys.map(([k, l]) => (
-        <li key={k}>
-          <kbd>{k}</kbd>
-          <span>{l}</span>
-        </li>
-      ))}
-    </ul>
+    <footer className="guide">
+      <ul aria-label="Keyboard controls">
+        {keys.map(([k, l]) => (
+          <li key={k}>
+            <kbd>{k}</kbd>
+            <span>{l}</span>
+          </li>
+        ))}
+      </ul>
+      <Clock />
+    </footer>
   );
 }
 
-/** Bracket cursor: sits on the focused slot (keyboard or click), never follows hover. */
-function SlotCursor({ mainRef }: { mainRef: RefObject<HTMLElement | null> }) {
-  const ref = useRef<HTMLDivElement>(null);
+/** The in-game clock at the corner of the menu. Client-only, so the server HTML never disagrees. */
+function Clock() {
+  const [now, setNow] = useState("");
   useEffect(() => {
-    let last: Element | null = null;
-    const place = () => {
-      const cur = ref.current;
-      const main = mainRef.current;
-      if (!cur || !main) return;
-      const active = document.activeElement;
-      const slot = active instanceof Element ? (active.closest("main .slot") as HTMLElement | null) : null;
-      document.querySelectorAll(".slot.is-cursor").forEach((s) => s !== slot && s.classList.remove("is-cursor"));
-      if (!slot || !slot.offsetParent) {
-        cur.style.opacity = "0";
-        last = null;
-        return;
-      }
-      slot.classList.add("is-cursor");
-      // Brackets sit on the shape you see: a card frames its poster, and every bracket
-      // follows the real (slanted) corner of the clip-path rather than the bounding box.
-      const target = (slot.querySelector(".card-poster") as HTMLElement | null) ?? slot;
-      const a = target.getBoundingClientRect();
-      const b = main.getBoundingClientRect();
-      const pts = shapeCorners(target, a.width, a.height);
-      const gap = 8;
-      const size = 26;
-      const xs = [pts.tl[0] - gap, pts.bl[0] - gap, pts.tr[0] + gap, pts.br[0] + gap];
-      const minX = Math.min(...xs);
-      const maxX = Math.max(...xs);
-      cur.style.width = `${maxX - minX}px`;
-      cur.style.height = `${a.height + gap * 2}px`;
-      cur.style.transform = `translate(${a.left - b.left + minX}px, ${a.top - b.top - gap}px)`;
-      const [tl, tr, bl, br] = Array.from(cur.children) as HTMLElement[];
-      const put = (el: HTMLElement, x: number, y: number) => {
-        el.style.left = `${x - minX}px`;
-        el.style.top = `${y + gap}px`;
-        el.style.right = "auto";
-        el.style.bottom = "auto";
-      };
-      put(tl, pts.tl[0] - gap, pts.tl[1] - gap);
-      put(tr, pts.tr[0] + gap - size, pts.tr[1] - gap);
-      put(bl, pts.bl[0] - gap, pts.bl[1] + gap - size);
-      put(br, pts.br[0] + gap - size, pts.br[1] + gap - size);
-      cur.style.opacity = "1";
-      if (slot !== last) {
-        retrigger(cur, "snap");
-        retrigger(slot, "land");
-      }
-      last = slot;
+    const pad = (n: number) => String(n).padStart(2, "0");
+    const tick = () => {
+      const d = new Date();
+      setNow(`${pad(d.getHours())}:${pad(d.getMinutes())} · ${d.toLocaleDateString("en", { weekday: "short" })}`);
     };
-    const later = () => setTimeout(place);
-    // Panels are dealt in with a short slide; re-measure once they land so brackets sit on the final spot.
-    const settle = (e: AnimationEvent) => {
-      if (e.animationName === "deal" || e.animationName === "cutIn") place();
-    };
-    document.addEventListener("focusin", place);
-    document.addEventListener("focusout", later);
-    document.addEventListener("animationend", settle);
-    window.addEventListener("resize", place);
-    const ro = new ResizeObserver(place);
-    if (mainRef.current) ro.observe(mainRef.current);
-    return () => {
-      document.removeEventListener("focusin", place);
-      document.removeEventListener("focusout", later);
-      document.removeEventListener("animationend", settle);
-      window.removeEventListener("resize", place);
-      ro.disconnect();
-    };
-  }, [mainRef]);
+    tick();
+    const t = setInterval(tick, 20000);
+    return () => clearInterval(t);
+  }, []);
   return (
-    <div id="cursor" ref={ref} aria-hidden="true">
-      <i />
-      <i />
-      <i />
-      <i />
-    </div>
+    <span className="clock" aria-hidden="true">
+      {now}
+    </span>
   );
-}
-
-type Pt = [number, number];
-
-/** One clip-path length ("12%", "26px", "calc(100% - 26px)") in px along an axis of `size`. */
-function length(token: string, size: number) {
-  const calc = /calc\(\s*100%\s*-\s*([\d.]+)px\s*\)/.exec(token);
-  if (calc) return size - Number(calc[1]);
-  if (token.endsWith("%")) return (Number.parseFloat(token) / 100) * size;
-  return Number.parseFloat(token) || 0;
-}
-
-/** The four visible corners of an element's polygon clip-path (its box corners when it has none). */
-function shapeCorners(el: HTMLElement, w: number, h: number): { tl: Pt; tr: Pt; bl: Pt; br: Pt } {
-  const box = { tl: [0, 0] as Pt, tr: [w, 0] as Pt, bl: [0, h] as Pt, br: [w, h] as Pt };
-  const clip = getComputedStyle(el).clipPath;
-  const inner = /^polygon\((.*)\)$/.exec(clip ?? "")?.[1];
-  if (!inner) return box;
-  const points: Pt[] = inner.split(/,(?![^(]*\))/).map((pair) => {
-    const parts = pair.trim().match(/calc\([^)]*\)|[^\s]+/g) ?? ["0", "0"];
-    return [length(parts[0], w), length(parts[1] ?? "0", h)];
-  });
-  const nearest = (c: Pt) => points.reduce((best, p) => (Math.hypot(p[0] - c[0], p[1] - c[1]) < Math.hypot(best[0] - c[0], best[1] - c[1]) ? p : best), points[0]);
-  return { tl: nearest(box.tl), tr: nearest(box.tr), bl: nearest(box.bl), br: nearest(box.br) };
 }
 
 /** Spatial move to the nearest visible slot in a direction. */

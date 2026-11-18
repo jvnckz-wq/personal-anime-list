@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import { Ransom } from "@/components/ui/ransom";
 import { SearchField } from "@/components/ui/search-field";
 import { EmptyState, Icon, SkewButton, Tabs } from "@/components/ui/primitives";
 import { CardSkeletons, MetaList, PosterCard } from "@/components/ui/slots";
@@ -190,7 +191,7 @@ export function DiscoverScreen() {
   return (
     <section className="screen" aria-labelledby="t-new">
       <h1 className="page-title" id="t-new" tabIndex={-1}>
-        New game
+        <Ransom text="New game" seed={16} />
       </h1>
       <SearchField
         id="q"

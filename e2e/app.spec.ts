@@ -11,7 +11,7 @@ test.beforeEach(async ({ page }) => {
 });
 
 test("empty Continue explains files and points to New game", async ({ page }) => {
-  await page.goto("/");
+  await page.goto("/continue");
   await expect(page.getByRole("heading", { name: "Nothing in progress" })).toBeVisible();
   await expect(page.getByText("Every game you save gets its own file number")).toBeVisible();
   await page.keyboard.press("2");
@@ -63,9 +63,10 @@ test("opening a file right after typing a search is not undone by the pending se
 
 test("Continue: one-tap logging, undo, keyboard cursor, CLEAR in place", async ({ page }) => {
   await seedList(page, sampleList());
+  await page.keyboard.press("1");
+  await expect(page).toHaveURL(/\/continue$/);
   const hero = page.locator("main .slot.hero:visible");
   await expect(hero).toBeFocused();
-  await expect(page.locator("#cursor")).toHaveCSS("opacity", "1");
   await expect(hero.locator(".file-no")).toContainText("03");
 
   await hero.getByRole("button", { name: /Watched EP 13/ }).click();
@@ -135,8 +136,11 @@ test("File details: status side effects, score, delete with undo", async ({ page
 
 test("File details: not a file yet offers Save game and Plan to watch; Esc goes back", async ({ page }) => {
   await seedList(page, sampleList());
+  await page.keyboard.press("1");
   await page.locator("main .slot.hero:visible").press("Enter");
   await expect(page).toHaveURL(/\/anime\/1$/);
+  await page.keyboard.press("Escape");
+  await expect(page).toHaveURL(/\/continue$/);
   await page.keyboard.press("Escape");
   await expect(page).toHaveURL(/\/$/);
 
@@ -154,6 +158,25 @@ test("Records: play record, cleared wall, data survives a reload", async ({ page
   await page.reload();
   await expect(page.locator(".wall .stamp:visible")).toHaveCount(2);
   await expect(page.getByRole("button", { name: "Restore" })).toBeVisible();
+});
+
+test("Title screen: menu cursor, + logs the latest save, Esc comes back to the same entry", async ({ page }) => {
+  await seedList(page, sampleList());
+  const items = page.locator(".t-menu .m-item:visible");
+  await expect(items.first()).toBeFocused();
+  await expect(page.locator(".slip .slip-title")).toContainText("Frieren");
+  await page.keyboard.press("ArrowDown");
+  await expect(items.nth(1)).toBeFocused();
+  await expect(items.nth(1)).toHaveClass(/(^| )on( |$)/);
+  await page.keyboard.press("+");
+  await expect(toast(page)).toHaveText(/Frieren: episode 13 logged/);
+  await expect(page.locator(".slip .ep-line")).toContainText("Episode 13 of 28");
+  await page.keyboard.press("Enter");
+  await expect(page).toHaveURL(/\/discover$/);
+  await expect(cards(page).first()).toBeVisible();
+  await page.keyboard.press("Escape");
+  await expect(page).toHaveURL(/\/$/);
+  await expect(page.locator(".t-menu .m-item:visible").nth(1)).toBeFocused();
 });
 
 test("/ from any screen opens New game with the search focused", async ({ page }) => {

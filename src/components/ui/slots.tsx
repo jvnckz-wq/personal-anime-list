@@ -5,6 +5,7 @@ import { type ReactNode, type RefObject, useEffect, useRef } from "react";
 import { ago, episodeText, pad, percent, playTime, slotLabel } from "@/lib/format";
 import { useList } from "@/lib/store/list-context";
 import type { ListEntry } from "@/lib/types";
+import { CutFrame } from "./cut-frame";
 import { MemoryBlocks, Poster, SkewButton, Stamp, retrigger } from "./primitives";
 
 /** Answers the last change to this file: a hit for +1, the flood and stamp for CLEAR. */
@@ -28,7 +29,7 @@ export function useSlotFlash(ref: RefObject<HTMLElement | null>, malId: number) 
 
 const stop = (e: React.SyntheticEvent) => e.stopPropagation();
 
-function LogButton({ entry, large }: { entry: ListEntry; large?: boolean }) {
+export function LogButton({ entry, large }: { entry: ListEntry; large?: boolean }) {
   const { logEpisode } = useList();
   const next = entry.episodesWatched + 1;
   return (
@@ -90,7 +91,7 @@ export function SaveSlot({ entry, clearing }: { entry: ListEntry; clearing: bool
         </div>
         <MemoryBlocks watched={entry.episodesWatched} total={entry.totalEpisodes} />
         <div className="actions">
-          <LogButton entry={entry} large />
+          {entry.status === "watching" ? <LogButton entry={entry} large /> : null}
           <SkewButton
             variant="outline"
             onClick={(e) => {
@@ -102,6 +103,7 @@ export function SaveSlot({ entry, clearing }: { entry: ListEntry; clearing: bool
           </SkewButton>
         </div>
       </div>
+      <CutFrame />
     </article>
   );
 }
@@ -163,6 +165,7 @@ export function SlotRow({ entry, level = 3 }: { entry: ListEntry; level?: 2 | 3 
           </SkewButton>
         ) : null}
       </div>
+      <CutFrame />
     </article>
   );
 }
